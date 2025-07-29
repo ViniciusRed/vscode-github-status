@@ -2,9 +2,9 @@
   "name": "github-status-presence",
   "displayName": "GitHub Status Presence",
   "description": "An extension that will sync your current workspace name and time spent on it to your GitHub status",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "engines": {
-    "vscode": "^1.45.0"
+    "vscode": "^1.102.0"
   },
   "icon": "icons/icon128.png",
   "author": {
@@ -2966,20 +2966,20 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/glob": "^7.1.1",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^13.11.0",
-    "@types/vscode": "^1.45.0",
-    "@typescript-eslint/eslint-plugin": "^2.30.0",
-    "@typescript-eslint/parser": "^2.30.0",
-    "eslint": "^6.8.0",
-    "glob": "^7.1.6",
-    "mocha": "^7.1.2",
-    "typescript": "^3.8.3",
+    "@types/glob": "8.1.0",
+    "@types/mocha": "10.0.10",
+    "@types/node": "24.1.0",
+    "@types/vscode": "1.102.0",
+    "@typescript-eslint/eslint-plugin": "8.38.0",
+    "@typescript-eslint/parser": "8.38.0",
+    "eslint": "9.32.0",
+    "glob": "11.0.3",
+    "mocha": "11.7.1",
+    "typescript": "5.8.3",
     "vscode-test": "^1.3.0"
   },
   "dependencies": {
-    "@octokit/graphql": "^4.5.0",
-    "moment": "^2.26.0"
+    "@octokit/graphql": "9.0.1",
+    "moment": "2.30.1"
   }
 }

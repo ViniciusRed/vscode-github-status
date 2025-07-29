@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { graphql as gitHubApi } from "@octokit/graphql";
 import { RequestParameters, graphql } from "@octokit/graphql/dist-types/types";
-import * as moment from "moment";
+import moment from "moment";
 
 interface IEnv {
   [key: string]: string | undefined;
