@@ -234,7 +234,7 @@ export default class {
     }
 
     // Fallback to static map or shortcode
-    return emojiMap[name];
+    return emojiMap[name] || `:${name}:`;
   }
 
   public getAvailableEmojis(): EmojiCacheItem[] {
