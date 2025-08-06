@@ -43,7 +43,7 @@
           },
           "githubstatus.idleTimeout": {
             "type": "integer",
-            "default": 15,
+            "default": 8,
             "description": "Minutes of inactivity before automatically setting status to idle."
           },
           "githubstatus.blacklist": {

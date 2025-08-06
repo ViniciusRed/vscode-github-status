@@ -13,11 +13,21 @@ let isActive = false; // Track activation status
 
 export async function activate(context: vscode.ExtensionContext) {
   statusBarIcon.show();
-  
+
+  // Listen for configuration changes to blacklist
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration("githubstatus.blacklist")) {
+        config = vscode.workspace.getConfiguration("githubstatus");
+        vscode.commands.executeCommand("githubstatus.restart");
+      }
+    })
+  );
+
   // Check blacklist
   const folders = vscode.workspace.workspaceFolders;
   const blacklist = config.get<string[]>("blacklist") || [];
-  
+
   if (!folders || blacklist.includes(folders[0].uri.fsPath)) {
     statusBarIcon.text = "GitHub Status Blacklisted";
     statusBarIcon.command = "githubstatus.toggleBlacklist";
@@ -28,12 +38,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const token = config.get<string>("token");
   gitHubService = new GitHubService(token, context);
-  
+
   if (gitHubService.received && vscode.workspace.name) {
     interval = await gitHubService.updateStatus(vscode.workspace.name);
     isActive = true;
   }
-  
+
   statusBarIcon.text = "GitHub Status Syncing";
   statusBarIcon.command = "githubstatus.showMenu";
   statusBarIcon.tooltip = "Click to open GitHub Status menu";
@@ -183,7 +193,8 @@ export async function activate(context: vscode.ExtensionContext) {
           const newBlacklist = [...blacklist, workspacePath];
           await config.update("blacklist", newBlacklist, vscode.ConfigurationTarget.Global);
           vscode.window.showInformationMessage("Workspace added to blacklist");
-          deactivate();
+          await deactivate();
+          // Ensure status bar reflects blacklisted state
           statusBarIcon.text = "GitHub Status Blacklisted";
           statusBarIcon.command = "githubstatus.toggleBlacklist";
           statusBarIcon.tooltip = "Click to remove from blacklist";
@@ -255,10 +266,13 @@ export async function deactivate() {
     clearInterval(interval);
     interval = null;
   }
-  
-  // Don't change status bar text here as it's handled by the calling command
-  // Only clear interval and reset gitHubService to default if fully deactivating
-  if (gitHubService && !isActive) {
+
+  if (gitHubService) {
     await gitHubService.setDefault();
   }
+
+  // Update status bar to reflect deactivated or blacklisted state
+  statusBarIcon.text = isActive ? "GitHub Status Not Syncing" : "GitHub Status Blacklisted";
+  statusBarIcon.tooltip = "Click to open GitHub Status menu";
+  isActive = false;
 }

@@ -126,7 +126,7 @@ export default class {
       const response = await fetch("https://api.github.com/emojis");
       if (response.ok) {
         this.__emojis = await response.json() as GitHubEmoji;
-        
+
         // Convert to cache format
         this.__emojiCache = Object.entries(this.__emojis).map(([name, url]) => ({
           name,
@@ -243,7 +243,7 @@ export default class {
 
   public async selectEmoji(): Promise<string | undefined> {
     const emojiList = this.getAvailableEmojis();
-    
+
     // Create quick pick items with text-based emoji preview
     const quickPickItems = emojiList.map(emoji => ({
       label: `${this.getEmojiPreview(emoji.name, emoji.url)} :${emoji.name}:`,
@@ -257,7 +257,7 @@ export default class {
     quickPickItems.sort((a, b) => {
       const aIndex = popularEmojis.indexOf(a.emoji);
       const bIndex = popularEmojis.indexOf(b.emoji);
-      
+
       if (aIndex !== -1 && bIndex !== -1) {
         return aIndex - bIndex;
       } else if (aIndex !== -1) {
@@ -302,7 +302,7 @@ export default class {
     const time = moment(new Date());
     let diff = "";
     let interval: NodeJS.Timeout | null = null;
-    
+
     // Check if user has been idle
     const minutesSinceActivity = time.diff(this.__lastActivity, "minutes");
     if (minutesSinceActivity >= this.__idleTimeout && !this.__isIdle) {
@@ -315,7 +315,7 @@ export default class {
     if (this.__isIdle) {
       return null;
     }
-    
+
     if (!this.__start) {
       this.__start = time;
       interval = setInterval(
@@ -329,9 +329,8 @@ export default class {
         const hours = Math.floor(diffN / 60);
         const minutes = Math.floor(diffN % 60);
         console.log(diffN, time.diff(this.__start, "minutes"), hours, minutes);
-        diff = `(${hours} hour${hours > 1 ? "s" : ""} ${minutes} minute${
-          minutes > 1 ? "s" : ""
-        })`;
+        diff = `(${hours} hour${hours > 1 ? "s" : ""} ${minutes} minute${minutes > 1 ? "s" : ""
+          })`;
       }
     }
 
@@ -342,7 +341,7 @@ export default class {
       message: `Working on ${workspace}${this.__currentLanguage ? ` in ${this.__currentLanguage}` : ""}${diff.length > 0 ? ` for ${diff}` : ""}`,
       emoji: `:${emoji}:`,
     };
-    
+
     try {
       await this.__api(changeUserStatusMutation, { request: {}, status });
     } catch (err) {
@@ -356,13 +355,13 @@ export default class {
     const emoji = vscode.workspace
       .getConfiguration("githubstatus")
       .get("emojiDefault") as string || "zzz";
-    
+
     const status: UserStatus = {
       emoji: `:${emoji}:`,
       message: "Idle - Away from keyboard",
       expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour expiry
     };
-    
+
     try {
       await this.__api(changeUserStatusMutation, { request: {}, status });
     } catch (err) {
@@ -386,12 +385,12 @@ export default class {
     const emoji = vscode.workspace
       .getConfiguration("githubstatus")
       .get("emojiDefault") as string;
-    
+
     const status: UserStatus = {
       emoji: emoji ? `:${emoji}:` : undefined,
       message,
     };
-    
+
     try {
       await this.__api(changeUserStatusMutation, { request: {}, status });
     } catch (err) {
